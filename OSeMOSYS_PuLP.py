@@ -56,14 +56,14 @@ logging.info("{}\tScript started.".format(dt.datetime.now().strftime("%Y-%m-%d %
 inputFile = "UTOPIA_BASE.xlsx"  # Update with actual filename
 
 # Settings
-inputDir = ".\Input_Data\\"
+inputDir = os.path.join("Input_Data")
 modelName = inputFile.split('.')[0]
 sheetSets = "SETS"
 sheetParams = "PARAMETERS"
 sheetParamsDefault = "PARAMETERS_DEFAULT"
 sheetMcs = "MCS"
 sheetMcsNum = "MCS_num"
-outputDir = ".\Output_Data\\"
+outputDir = os.path.join("Output_Data")
 outputFile = f"{modelName}_result.xlsx"
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -415,7 +415,7 @@ def saveResults(dataframe, fileDir, fileName):
     for d, name in zip(dataframe_list, name_list):
         d.to_excel(writer, sheet_name=name, index=False)
 
-    writer.save()
+    writer.close()
     return
 
 
