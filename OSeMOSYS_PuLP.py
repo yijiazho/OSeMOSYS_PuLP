@@ -64,7 +64,9 @@ sheetParamsDefault = "PARAMETERS_DEFAULT"
 sheetMcs = "MCS"
 sheetMcsNum = "MCS_num"
 outputDir = os.path.join("Output_Data")
-outputFile = f"{modelName}_result.xlsx"
+# Allow customizing output filename via env var OUTPUT_SUFFIX (e.g., _losses)
+_suffix = os.environ.get("OUTPUT_SUFFIX", "")
+outputFile = f"{modelName}_result{_suffix}.xlsx"
 
 # ----------------------------------------------------------------------------------------------------------------------
 #    FUNCTIONS
@@ -608,6 +610,21 @@ StorageMaxDischargeRate_default_value = p_default_df[p_default_df['PARAM'] == "S
 StorageMaxDischargeRate_specified = tuple([(str(r), str(s)) for r, s in zip(p_df[p_df['PARAM'] == "StorageMaxDischargeRate"].REGION, p_df[p_df['PARAM'] == "StorageMaxDischargeRate"].STORAGE)])
 StorageMaxDischargeRate = {str(r): {str(s): p_df[(p_df['PARAM'] == "StorageMaxDischargeRate") & (p_df['REGION'] == r) & (p_df['STORAGE'] == s)].VALUE.iat[0] if (str(r), str(s)) in StorageMaxDischargeRate_specified else StorageMaxDischargeRate_default_value for s in STORAGE} for r in REGION}
 
+# StorageChargeEfficiency (η_in) — default 1.0 if not provided
+StorageChargeEfficiency_default_value = 1.0 if p_default_df[p_default_df['PARAM'] == "StorageChargeEfficiency"].empty else p_default_df[p_default_df['PARAM'] == "StorageChargeEfficiency"].VALUE.iat[0]
+StorageChargeEfficiency_specified = tuple([(str(r), str(s)) for r, s in zip(p_df[p_df['PARAM'] == "StorageChargeEfficiency"].REGION, p_df[p_df['PARAM'] == "StorageChargeEfficiency"].STORAGE)]) if not p_df[p_df['PARAM'] == "StorageChargeEfficiency"].empty else tuple()
+StorageChargeEfficiency = {str(r): {str(s): (p_df[(p_df['PARAM'] == "StorageChargeEfficiency") & (p_df['REGION'] == r) & (p_df['STORAGE'] == s)].VALUE.iat[0] if (str(r), str(s)) in StorageChargeEfficiency_specified else StorageChargeEfficiency_default_value) for s in STORAGE} for r in REGION}
+
+# StorageDischargeEfficiency (η_out) — default 1.0 if not provided
+StorageDischargeEfficiency_default_value = 1.0 if p_default_df[p_default_df['PARAM'] == "StorageDischargeEfficiency"].empty else p_default_df[p_default_df['PARAM'] == "StorageDischargeEfficiency"].VALUE.iat[0]
+StorageDischargeEfficiency_specified = tuple([(str(r), str(s)) for r, s in zip(p_df[p_df['PARAM'] == "StorageDischargeEfficiency"].REGION, p_df[p_df['PARAM'] == "StorageDischargeEfficiency"].STORAGE)]) if not p_df[p_df['PARAM'] == "StorageDischargeEfficiency"].empty else tuple()
+StorageDischargeEfficiency = {str(r): {str(s): (p_df[(p_df['PARAM'] == "StorageDischargeEfficiency") & (p_df['REGION'] == r) & (p_df['STORAGE'] == s)].VALUE.iat[0] if (str(r), str(s)) in StorageDischargeEfficiency_specified else StorageDischargeEfficiency_default_value) for s in STORAGE} for r in REGION}
+
+# StorageStandingLossRate (λ per time bracket) — default 0.0 if not provided
+StorageStandingLossRate_default_value = 0.0 if p_default_df[p_default_df['PARAM'] == "StorageStandingLossRate"].empty else p_default_df[p_default_df['PARAM'] == "StorageStandingLossRate"].VALUE.iat[0]
+StorageStandingLossRate_specified = tuple([(str(r), str(s)) for r, s in zip(p_df[p_df['PARAM'] == "StorageStandingLossRate"].REGION, p_df[p_df['PARAM'] == "StorageStandingLossRate"].STORAGE)]) if not p_df[p_df['PARAM'] == "StorageStandingLossRate"].empty else tuple()
+StorageStandingLossRate = {str(r): {str(s): (p_df[(p_df['PARAM'] == "StorageStandingLossRate") & (p_df['REGION'] == r) & (p_df['STORAGE'] == s)].VALUE.iat[0] if (str(r), str(s)) in StorageStandingLossRate_specified else StorageStandingLossRate_default_value) for s in STORAGE} for r in REGION}
+
 # MinStorageCharge
 MinStorageCharge_default_value = p_default_df[p_default_df['PARAM'] == "MinStorageCharge"].VALUE.iat[0]
 MinStorageCharge_specified = tuple([(str(r), str(s), str(y)) for r, s, y in zip(p_df[p_df['PARAM'] == "MinStorageCharge"].REGION, p_df[p_df['PARAM'] == "MinStorageCharge"].STORAGE, p_df[p_df['PARAM'] == "MinStorageCharge"].YEAR)])
@@ -996,10 +1013,10 @@ while i <= mcs_num:
                             model += RateOfStorageCharge[r][s][ls][ld][lh][y] == pulp.lpSum([RateOfActivity[r][l][t][m][y] * TechnologyToStorage[r][t][s][m] * Conversionls[l][ls] * Conversionld[l][ld] * Conversionlh[l][lh] for t in TECHNOLOGY for m in MODE_OF_OPERATION for l in TIMESLICE if TechnologyToStorage[r][t][s][m] > 0]), ""
                             # S2_RateOfStorageDischarge
                             model += RateOfStorageDischarge[r][s][ls][ld][lh][y] == pulp.lpSum([RateOfActivity[r][l][t][m][y] * TechnologyFromStorage[r][t][s][m] * Conversionls[l][ls] * Conversionld[l][ld] * Conversionlh[l][lh] for t in TECHNOLOGY for m in MODE_OF_OPERATION for l in TIMESLICE if TechnologyFromStorage[r][t][s][m] > 0]), ""
-                            # S3_NetChargeWithinYear
-                            model += NetChargeWithinYear[r][s][ls][ld][lh][y] == pulp.lpSum([(RateOfStorageCharge[r][s][ls][ld][lh][y] - RateOfStorageDischarge[r][s][ls][ld][lh][y]) * YearSplit[l][y] * Conversionls[l][ls] * Conversionld[l][ld] * Conversionlh[l][lh] for l in TIMESLICE if (Conversionls[l][ls] > 0) and (Conversionld[l][ld] > 0) and (Conversionlh[l][lh] > 0)]), ""
-                            # S4_NetChargeWithinDay
-                            model += NetChargeWithinDay[r][s][ls][ld][lh][y] == (RateOfStorageCharge[r][s][ls][ld][lh][y] - RateOfStorageDischarge[r][s][ls][ld][lh][y]) * DaySplit[lh][y], ""
+                            # S3_NetChargeWithinYear (with round-trip efficiency and standing loss)
+                            model += NetChargeWithinYear[r][s][ls][ld][lh][y] == pulp.lpSum([((RateOfStorageCharge[r][s][ls][ld][lh][y] * StorageChargeEfficiency[r][s]) - (RateOfStorageDischarge[r][s][ls][ld][lh][y] / StorageDischargeEfficiency[r][s]) - (StorageStandingLossRate[r][s] * StorageLevelDayTypeStart[r][s][ls][ld][y])) * YearSplit[l][y] * Conversionls[l][ls] * Conversionld[l][ld] * Conversionlh[l][lh] for l in TIMESLICE if (Conversionls[l][ls] > 0) and (Conversionld[l][ld] > 0) and (Conversionlh[l][lh] > 0)]), ""
+                            # S4_NetChargeWithinDay (with round-trip efficiency and standing loss)
+                            model += NetChargeWithinDay[r][s][ls][ld][lh][y] == ((RateOfStorageCharge[r][s][ls][ld][lh][y] * StorageChargeEfficiency[r][s]) - (RateOfStorageDischarge[r][s][ls][ld][lh][y] / StorageDischargeEfficiency[r][s]) - (StorageStandingLossRate[r][s] * StorageLevelDayTypeStart[r][s][ls][ld][y])) * DaySplit[lh][y], ""
 
                 # S5_and_S6_StorageLevelYearStart
                 if int(y) == int(min(YEAR)):
