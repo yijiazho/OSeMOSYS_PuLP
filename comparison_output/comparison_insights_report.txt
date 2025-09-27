@@ -1,0 +1,81 @@
+============================================================
+REAL WORLD vs OSeMOSYS MODEL COMPARISON REPORT
+============================================================
+
+REAL WORLD DATA ANALYSIS (2022-2023)
+----------------------------------------
+Total Electricity Generation 2023: 4754.2 TWh
+Total Electricity Generation 2022: 4791.9 TWh
+Year-over-year change: -0.79%
+
+Top Electricity Generation Sources (2023):
+  Natural Gas: 1806.1 TWh (38.0%)
+  Nuclear: 774.9 TWh (16.3%)
+  Coal: 675.1 TWh (14.2%)
+  Renewables_Excl_Hydro: 650.2 TWh (13.7%)
+  Wind: 421.1 TWh (8.9%)
+
+MODEL DATA ANALYSIS (OSeMOSYS)
+------------------------------
+Number of modeled technologies: 9
+
+Model Technologies by Category:
+  Power Plants (E-series, SRE):
+    E01: 2.234 units
+    E31: 0.203 units
+    E51: 0.500 units
+    E70: 0.263 units
+    SRE: 0.100 units
+  Energy Service Demands (R-series):
+    RHE: 42.501 units
+    RHO: 47.402 units
+    RL1: 18.272 units
+  Transport Demands (TX-series):
+    TXD: 11.301 units
+
+KEY INSIGHTS
+---------------
+Real World Renewable Generation (2023): 831.7 TWh (17.5%)
+Real World Fossil Generation (2023): 2497.4 TWh (52.5%)
+
+OSEMOSYS MODEL STRUCTURE (CORRECTED)
+----------------------------------------
+• IMP* technologies: Import resources (IMPDSL1=diesel, IMPGSL1=gasoline, IMPHCO1=coal, IMPURN1=uranium)
+• E* + SRE technologies: Power generation plants
+  - E01: Coal power plant
+  - E21: Nuclear power plant
+  - E31: Hydro power plant (no import needed)
+  - E51: Pumped storage
+  - E70: Diesel power plant
+  - SRE: Crude oil power plant
+• R* technologies: Energy service demands (RL1=lighting, RHE=electric heating, RHO=oil heating)
+• TX* technologies: Transport demands (TXE=electric vehicles, TXD=diesel vehicles, TXG=gasoline vehicles)
+
+REAL WORLD COVERAGE IN MODEL
+------------------------------
+Technologies covered by model: 36.0% of real world generation
+Technologies NOT in model: 64.0% of real world generation
+
+Missing from model (major real world sources):
+• Natural Gas (38.0% of US generation) - No gas technology in current model
+• Wind (8.9% of US generation) - No wind technology in current model
+• Solar (varies) - No solar technology in current model
+• Other Renewables (biomass, geothermal) - Limited representation
+
+DATA LIMITATIONS & NOTES
+-------------------------
+• Real world data is from EPA (2022-2023) while model data is from OSeMOSYS (2008-2010)
+• Model uses UTOPIA reference system, not US electricity grid
+• Power generation comparison: Real world fuels vs Model E-series power plants
+• Different units and scales between datasets require careful interpretation
+• Real world data represents actual electricity generation in TWh
+• Model data represents capacity and fuel use in model-specific units
+• Filtered out unrealistic model values (≥1000) which appear to be upper bound constraints
+• Import technologies (IMP*) had constraint values of 99999, not actual capacities
+
+RECOMMENDATIONS
+---------------
+• Use this comparison to validate model assumptions against real trends
+• Consider updating model parameters to reflect current technology mix
+• Focus on relative proportions rather than absolute values for comparison
+• Use real world renewable growth trends to inform future scenarios

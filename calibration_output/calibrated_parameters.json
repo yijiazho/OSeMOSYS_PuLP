@@ -1,0 +1,112 @@
+{
+  "import_capacities": {
+    "IMPHCO1": {
+      "capacity_limit": 15451413.6,
+      "annual_consumption_pj": 12876178.0,
+      "fuel_type": "Coal",
+      "real_world_units": "439460.0 thousand_tons"
+    },
+    "IMPOIL1": {
+      "capacity_limit": 210802.176,
+      "annual_consumption_pj": 175668.48,
+      "fuel_type": "Oil",
+      "real_world_units": "28704.0 thousand_barrels"
+    },
+    "IMPGSL1": {
+      "capacity_limit": 17752697.687999997,
+      "annual_consumption_pj": 14793914.739999998,
+      "fuel_type": "Natural Gas",
+      "real_world_units": "14022668.0 thousand_mcf"
+    }
+  },
+  "generation_parameters": {
+    "E01": {
+      "estimated_capacity_mw": 143324.48630136988,
+      "capacity_factor": 0.6,
+      "annual_generation_pj": 2711.9286,
+      "fuel_type": "Coal",
+      "real_world_generation_gwh": 753313.5
+    },
+    "E21": {
+      "estimated_capacity_mw": 398758.904109589,
+      "capacity_factor": 0.5,
+      "annual_generation_pj": 6287.6304,
+      "fuel_type": "Natural Gas",
+      "real_world_generation_gwh": 1746564.0
+    },
+    "E31": {
+      "estimated_capacity_mw": 98072.6788432268,
+      "capacity_factor": 0.9,
+      "annual_generation_pj": 2783.538,
+      "fuel_type": "Nuclear",
+      "real_world_generation_gwh": 773205.0
+    },
+    "E51": {
+      "estimated_capacity_mw": 184969.1780821918,
+      "capacity_factor": 0.4,
+      "annual_generation_pj": 2333.2752,
+      "fuel_type": "Hydro",
+      "real_world_generation_gwh": 648132.0
+    },
+    "E70": {
+      "estimated_capacity_mw": 139503.91389432485,
+      "capacity_factor": 0.35,
+      "annual_generation_pj": 1539.7884000000001,
+      "fuel_type": "Wind",
+      "real_world_generation_gwh": 427719.0
+    },
+    "SRE": {
+      "estimated_capacity_mw": 101372.37442922375,
+      "capacity_factor": 0.25,
+      "annual_generation_pj": 799.2198000000001,
+      "fuel_type": "Solar",
+      "real_world_generation_gwh": 222005.5
+    }
+  },
+  "demand_parameters": {
+    "RHE": {
+      "annual_demand_pj": 5326.664400000001,
+      "sector": "Residential",
+      "real_world_demand_gwh": 1479629.0
+    },
+    "RL1": {
+      "annual_demand_pj": 5038.167600000001,
+      "sector": "Commercial",
+      "real_world_demand_gwh": 1399491.0
+    },
+    "RHO": {
+      "annual_demand_pj": 3653.496,
+      "sector": "Industrial",
+      "real_world_demand_gwh": 1014860.0
+    },
+    "TXE": {
+      "annual_demand_pj": 24.233400000000003,
+      "sector": "Transportation",
+      "real_world_demand_gwh": 6731.5
+    }
+  },
+  "derived_parameters": {
+    "system_metrics": {
+      "total_demand_gwh": 3900711.5,
+      "total_generation_gwh": 5281504.0,
+      "system_efficiency": 0.7385607395166225
+    },
+    "fuel_efficiencies": {
+      "Coal": {
+        "thermal_efficiency": 0.00021061596072996196,
+        "generation_pj": 2711.9286,
+        "consumption_pj": 12876178.0
+      },
+      "Oil": {
+        "thermal_efficiency": 0.00012256951275493476,
+        "generation_pj": 21.5316,
+        "consumption_pj": 175668.48
+      },
+      "Natural Gas": {
+        "thermal_efficiency": 0.0004250146435547188,
+        "generation_pj": 6287.6304,
+        "consumption_pj": 14793914.739999998
+      }
+    }
+  }
+}

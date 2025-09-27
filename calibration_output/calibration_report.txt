@@ -1,0 +1,73 @@
+============================================================
+OSeMOSYS MODEL CALIBRATION REPORT
+============================================================
+
+CALIBRATION SUMMARY
+--------------------
+Total Electricity Demand: 3900711.5 GWh
+Total Electricity Generation: 5281504.0 GWh
+System Efficiency: 73.9%
+
+IMPORT CAPACITY PARAMETERS
+------------------------------
+IMPHCO1 (Coal):
+  Capacity Limit: 15451413.6 PJ/year
+  Real World Consumption: 439460.0 thousand_tons
+
+IMPOIL1 (Oil):
+  Capacity Limit: 210802.2 PJ/year
+  Real World Consumption: 28704.0 thousand_barrels
+
+IMPGSL1 (Natural Gas):
+  Capacity Limit: 17752697.7 PJ/year
+  Real World Consumption: 14022668.0 thousand_mcf
+
+GENERATION TECHNOLOGY PARAMETERS
+-----------------------------------
+E01 (Coal):
+  Estimated Capacity: 143324 MW
+  Capacity Factor: 60.0%
+  Real World Generation: 753314 GWh
+
+E21 (Natural Gas):
+  Estimated Capacity: 398759 MW
+  Capacity Factor: 50.0%
+  Real World Generation: 1746564 GWh
+
+E31 (Nuclear):
+  Estimated Capacity: 98073 MW
+  Capacity Factor: 90.0%
+  Real World Generation: 773205 GWh
+
+E51 (Hydro):
+  Estimated Capacity: 184969 MW
+  Capacity Factor: 40.0%
+  Real World Generation: 648132 GWh
+
+E70 (Wind):
+  Estimated Capacity: 139504 MW
+  Capacity Factor: 35.0%
+  Real World Generation: 427719 GWh
+
+SRE (Solar):
+  Estimated Capacity: 101372 MW
+  Capacity Factor: 25.0%
+  Real World Generation: 222006 GWh
+
+DEMAND PARAMETERS
+-----------------
+RHE (Residential):
+  Annual Demand: 5326.7 PJ
+  Real World Demand: 1479629 GWh
+
+RL1 (Commercial):
+  Annual Demand: 5038.2 PJ
+  Real World Demand: 1399491 GWh
+
+RHO (Industrial):
+  Annual Demand: 3653.5 PJ
+  Real World Demand: 1014860 GWh
+
+TXE (Transportation):
+  Annual Demand: 24.2 PJ
+  Real World Demand: 6732 GWh

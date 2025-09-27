@@ -1,0 +1,4 @@
+,capacity_limit,annual_consumption_pj,fuel_type,real_world_units
+IMPHCO1,15451413.6,12876178.0,Coal,439460.0 thousand_tons
+IMPOIL1,210802.176,175668.48,Oil,28704.0 thousand_barrels
+IMPGSL1,17752697.687999997,14793914.739999998,Natural Gas,14022668.0 thousand_mcf

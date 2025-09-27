@@ -136,3 +136,8 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+
+/osemosys_env/
+
+.DS_Store

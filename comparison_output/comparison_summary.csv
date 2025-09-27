@@ -1,0 +1,6 @@
+Metric,Value,Notes
+Total Real World Generation 2023 (TWh),4754.2,EPA data
+Total Real World Generation 2022 (TWh),4791.9,EPA data
+Year-over-year Growth Rate (%),-0.79%,2023 vs 2022
+Number of Real World Technology Types,8,Major generation sources
+Number of Model Technologies,9,OSeMOSYS model
