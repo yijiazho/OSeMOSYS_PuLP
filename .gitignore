@@ -137,6 +137,11 @@ dmypy.json
 # pytype static type analyzer
 .pytype/
 
+*.pdf
+*.aux
+*.out
+*.bbl
+*.blg
 
 /osemosys_env/
 
