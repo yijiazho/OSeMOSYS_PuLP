@@ -26,6 +26,9 @@
 \section{Introduction}
 Open Source Energy Modeling System (OSeMOSYS) is an open-source energy modeling system that provides a framework for simulating and optimizing energy systems. It is designed to be flexible and extensible, allowing users to model a wide range of energy technologies and systems. The main goal of OSeMOSYS is to support decision-making in energy planning and policy by providing insights into the costs, emissions, and other impacts of different energy scenarios. Based on the design and development of the OSeMOSYS model \cite{Howells2011}, this project aims to enhance and improve the original open source model by incorporating additional features and functionalities. The project will involve a comprehensive review of the existing model, identification of areas for improvement, and implementation of new features to enhance its capabilities. The final deliverable will be an updated version of the OSeMOSYS model that is more robust, user-friendly, and capable of addressing a wider range of energy modeling scenarios.
 
+\section{Problem Statement}
+The problem this model is trying to solve is to optimize the energy system of a given region by minimizing the total cost of energy production and consumption while satisfying a set of constraints related to energy demand, resource availability, and technology characteristics. The model aims to provide insights into the optimal mix of energy technologies and resources that can meet the energy demand of the region while minimizing costs and emissions. 
+
 \section{Background}
 \subsection{Objectives}
 The main objective is to minimize the total Net Present Value (NPV) of the energy system over the entire planning horizon, which includes both investment costs and operational costs. The model aims to achieve this objective while satisfying a set of constraints related to energy demand, resource availability, and technology characteristics.
@@ -34,6 +37,28 @@ The main objective is to minimize the total Net Present Value (NPV) of the energ
 We make the assumptions that the energy system is represented as a network of interconnected technologies, each with its own set of characteristics and constraints. The model assumes the parameters and variables are predefined based on the assumptions listed in the next section.
 
 \subsection{Variables and Parameters}
+\subsection{Equations}
+The model consists of a set of equations that define the relationships between the variables and parameters. The main equations include:
+\begin{align}
+&\forall_{y,t,r} \; StorageCharge_{s,y,l,r} = 
+\sum_{t,m} RateOfActivity_{y,l,t,m,r} 
+\times TechnologyToStorage_{t,m,s,r} \times YearSplit_{y,l} \\[1em]
+%
+&\forall_{y,t,r} \; StorageDischarge_{s,y,l,r} = 
+\sum_{t,m} RateOfActivity_{y,l,t,m,r} 
+\times TechnologyToStorage_{t,m,s,r} \times YearSplit_{y,l} \\[1em]
+%
+&\forall_{s,y,l,r} \; NetStorageCharge_{s,y,l,r} = 
+StorageCharge_{s,y,l,r} - StorageDischarge_{s,y,l,r} \\[1em]
+%
+&\forall_{b,s,r} \; StorageLevel_{b,s,r} = 
+\sum_{l,y} \left( \frac{NetStorageCharge_{s,y,l,r}}{YearSplit_{y,l}} \right) 
+\times StorageInflectionTimes_{y,l,b} \\[1em]
+%
+&\forall_{b,s,r} \; StorageLowerLimit_{s,r} \leq StorageLevel_{b,s,r} 
+\leq StorageUpperLimit_{s,r}
+\end{align}
+
 \subsubsection{Inputs}
 \begin{itemize}
     \item $Region(r)$: The geographical area being modeled. The example model uses a hypothetical region "UTOPIA".
@@ -190,8 +215,47 @@ As for the optimized result, I have created the New Technology Investment over t
 I try to enhance the model by incorporating additional features and functionalities. This change includes adding charge and discharge efficiencies for storage technologies, creating comprehensive testing and visualization functionalities. 
 
 \subsection{Comparison with Real-World Data}
-At the same time, I also collected real-world data to compare the model's predictions with actual outcomes. However, due to the legacy data lacking details on certain technologies, I only used the latest data from 2022 to 2023 in the US to compare with the model's output. The data needs to be transformed as there is not an exact one to one mapping relationships for a lot of variables in the real world mapping to the model. The comparison results are shown in Figure \ref{fig:real_world_comparison}. We notice that the model does not cover all technologies in the real world, expecially the renewable sources excluding hydroelectricity like Solar Thermal and Photovoltaic. However, the model does capture the general trend of the energy system, such as the dominance of natural gas and coal in electricity generation. And for that part the energy imports and consumptions are quite close to the real-world data.
+At the same time, I also collected real-world data to compare the model's predictions with actual outcomes. However, due to the legacy data lacking details on certain technologies, I only used the latest data from 2022 to 2023 in the US to compare with the model's output. The data needs to be transformed as there is not an exact one to one mapping relationships for a lot of variables like the technologies used in the real world mapping to the model. The comparison results are shown in Figure \ref{fig:real_world_comparison}. We notice that the model does not cover all technologies in the real world, expecially the renewable sources excluding hydroelectricity like Solar Thermal and Photovoltaic. However, the model does capture the general trend of the energy system, such as the dominance of natural gas and coal in electricity generation. And for that part the energy imports and consumptions are quite close to the real-world data.
+There are two major missing technologies in the model compared to the real world.
+\begin{itemize}
+    \item Natural Gas (38.0\% of US generation) - No gas as the import in current model.
+    \item Wind (8.9\% of US generation) - No wind technology in current model.
+\end{itemize}
 
+And the data also have some limitations including:
+\begin{itemize}
+    \item Real world data is from EPA (2022-2023) while model data is from OSeMOSYS (1990-2010)
+    \item Model uses UTOPIA reference system, not US electricity grid
+    \item Power generation comparison: Model uses ideal E-series power plants for simplification
+    \item Different units and scales between datasets require careful interpretation
+    \item Real world data represents actual electricity generation in TWh
+    \item Model data represents capacity and fuel use in model-specific units
+    \item Filtered out unrealistic model values ($\geq$ 1000) which appear to be upper bound constraints
+    \item Import technologies (IMP*) had constraint values of 99999, not actual capacities
+\end{itemize}
+
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        REAL WORLD DATA ANALYSIS (2022-2023) \\
+        \midrule
+        Total Electricity Generation 2023: 4754.2 TWh \\
+        Total Electricity Generation 2022: 4791.9 TWh \\
+        Year-over-year change: -0.79\% \\
+        \midrule
+        Top Electricity Generation Sources (2023): \\
+         $\bullet$ Natural Gas: 1806.1 TWh (38.0\%) \\
+         $\bullet$ Nuclear: 774.9 TWh (16.3\%) \\
+         $\bullet$ Coal: 675.1 TWh (14.2\%) \\
+         $\bullet$ Renewables\_Excl\_Hydro: 650.2 TWh (13.7\%) \\
+         $\bullet$ Wind: 421.1 TWh (8.9\%) \\
+        \bottomrule
+    \end{tabular}
+    \caption{REAL WORLD vs OSeMOSYS MODEL COMPARISON REPORT}
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -212,11 +276,11 @@ I have added charging and discharging efficiencies parameters, assuming that the
 
 
 \section{Challenges}
-Some challenges I anticipate include:
+Some challenges I face include:
 \begin{itemize}
-    \item Data Availability: Accessing high-quality, real-world data for model validation may be difficult.
+    \item Data Availability: Accessing high-quality, real-world data for model validation is difficult. There are extra efforts needed to convert the data into a format that can be used in the model.
     \item Model Complexity: As I add more features and functionalities, the model may become more complex and harder to solve.
-    \item Computational Resources: The optimization process may require significant computational resources, especially for large-scale models.
+    \item Lack of Verification: There is no real verification as the real-world scenarios do not necessarily follow the minimized cost this model aims to achieve. And there is not guarantee that the model will produce accurate results for all scenarios without proper testing.
 \end{itemize}
 
 
